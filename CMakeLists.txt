@@ -1,5 +1,6 @@
-project(arcus)
 cmake_minimum_required(VERSION 3.6)
+
+project(arcus)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
