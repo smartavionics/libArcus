@@ -17,7 +17,7 @@ endif()
 # However, if ProtobufConfig is used instead, there is a CMake option that controls
 # this, which defaults to OFF. We need to force this option to ON instead.
 set(protobuf_MODULE_COMPATIBLE ON CACHE "" INTERNAL FORCE)
-find_package(Protobuf 3.0.0 REQUIRED)
+find_package(Protobuf 3 REQUIRED)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) #Required if a patch to libArcus needs to be made via templates.
 
@@ -32,7 +32,7 @@ if(BUILD_PYTHON)
         find_package(PythonLibs 3.4 REQUIRED)
     else()
         # Use FindPython3 for CMake >=3.12
-        find_package(Python3 3.4 REQUIRED COMPONENTS Interpreter Development)
+        find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
     endif()
 
     find_package(SIP REQUIRED)
