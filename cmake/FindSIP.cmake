@@ -24,8 +24,8 @@ if(APPLE)
     set(CMAKE_FIND_FRAMEWORK LAST)
 endif()
 
-# FIXME: Use FindPython3 to find Python, new in CMake 3.12.
-# However currently on our CI server it finds the wrong Python version and then doesn't find the headers.
+# FIXME: Use the new FindPython3 module rather than these. New in CMake 3.12.
+# However currently that breaks on our CI server, since the CI server finds the built-in Python3.6 and then doesn't find the headers.
 find_package(PythonInterp 3.5 REQUIRED)
 find_package(PythonLibs 3.5 REQUIRED)
 
@@ -33,7 +33,6 @@ find_package(PythonLibs 3.5 REQUIRED)
 set(Python3_EXECUTABLE ${PYTHON_EXECUTABLE})
 set(Python3_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
 set(Python3_LIBRARIES ${PYTHON_LIBRARIES})
-set(Python3_VERSION_MINOR "${PYTHON_VERSION_MINOR}")
 
 execute_process(
    COMMAND ${Python3_EXECUTABLE} -c
@@ -63,16 +62,12 @@ endif()
 
 get_filename_component(_python_binary_path ${Python3_EXECUTABLE} DIRECTORY)
 
-find_program(SIP_EXECUTABLE sip
+find_program(SIP_EXECUTABLE sip5
     HINTS ${CMAKE_PREFIX_PATH}/bin ${CMAKE_INSTALL_PATH}/bin ${_python_binary_path} ${Python3_SITELIB}/PyQt5
 )
 
-find_path(SIP_INCLUDE_DIRS sip.h
-    HINTS ${CMAKE_PREFIX_PATH}/include ${CMAKE_INSTALL_PATH}/include ${Python3_INCLUDE_DIRS} ${Python3_SITELIB}/PyQt5
-)
-
 execute_process(
-    COMMAND ${Python3_EXECUTABLE} -c "import sip; print(sip.SIP_VERSION_STR)"
+    COMMAND ${Python3_EXECUTABLE} -c "import PyQt5.sip; print(PyQt5.sip.SIP_VERSION_STR)"
     RESULT_VARIABLE _process_status
     OUTPUT_VARIABLE _process_output
     OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -83,10 +78,10 @@ if(${_process_status} EQUAL 0)
 endif()
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(SIP REQUIRED_VARS SIP_EXECUTABLE SIP_INCLUDE_DIRS VERSION_VAR SIP_VERSION)
+find_package_handle_standard_args(SIP REQUIRED_VARS SIP_EXECUTABLE VERSION_VAR SIP_VERSION)
 
 if(SIP_FOUND)
     include(${CMAKE_CURRENT_LIST_DIR}/SIPMacros.cmake)
 endif()
 
-mark_as_advanced(SIP_EXECUTABLE SIP_INCLUDE_DIRS SIP_VERSION)
+mark_as_advanced(SIP_EXECUTABLE SIP_VERSION)
