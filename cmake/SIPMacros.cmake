@@ -102,8 +102,6 @@ MACRO(ADD_SIP_PYTHON_MODULE MODULE_NAME MODULE_SIP)
         OUTPUT ${_sip_output_files}
         COMMAND ${CMAKE_COMMAND} -E echo ${message}
         COMMAND ${CMAKE_COMMAND} -E touch ${_sip_output_files}
-        COMMAND ${CMAKE_PREFIX_PATH}/bin/sip-module --sdist --sip-h --target-dir ${CMAKE_CURRENT_BINARY_DIR}/${_module_path} sip5
-        COMMAND ${Python3_EXECUTABLE} -m pip install ${CMAKE_CURRENT_BINARY_DIR}/${_module_path}/sip5-12.8.1.tar.gz
         COMMAND ${SIP_EXECUTABLE} -n sip5 ${_sip_tags} ${_sip_x} ${SIP_EXTRA_OPTIONS} -j ${SIP_CONCAT_PARTS} -c ${CMAKE_CURRENT_BINARY_DIR}/${_module_path} ${_sip_includes} ${_abs_module_sip}
         DEPENDS ${_abs_module_sip} ${SIP_EXTRA_FILES_DEPEND}
     )
